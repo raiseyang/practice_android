@@ -19,6 +19,10 @@
         </activity>
         <activity android:name=".dagger2.DaggerActivity">
         </activity>
+        <activity android:name=".glide.GlideActivity">
+        </activity>
+        <activity android:name=".iotdialog.DialogActivity">
+        </activity>
     </application>
 
 </manifest>

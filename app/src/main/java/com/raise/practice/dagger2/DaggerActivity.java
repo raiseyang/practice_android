@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 /**
  * http://www.jianshu.com/p/39d1df6c877d
+ * dagger新版本使用该博客的方法失效；dagger2官方文档晦涩难懂
  */
 public class DaggerActivity extends AppCompatActivity implements DaggerContract.View {
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="dialog_layout_background" type="id">dialog_layout_background</item>
+    <item name="dialog_textview_title" type="id">dialog_textview_title</item>
+
+    <item name="dialog_layout_message" type="id">dialog_layout_message</item>
+    <item name="dialog_textview_message" type="id">dialog_textview_message</item>
+    <item name="dialog_listview_message" type="id">dialog_listview_message</item>
+
+    <item name="dialog_layout_buttons" type="id"> dialog_layout_buttons</item>
+    <item name="dialog_button_positive" type="id">dialog_button_positive</item>
+    <item name="dialog_button_negative" type="id">dialog_button_negative</item>
+</resources>

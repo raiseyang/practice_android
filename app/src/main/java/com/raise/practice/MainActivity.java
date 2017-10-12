@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.raise.practice.dagger2.DaggerActivity;
+import com.raise.practice.iotdialog.DialogActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,5 +17,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void click_dagger2(View view) {
         DaggerActivity.startActivity(this);
+    }
+
+    public void click_dialog(View view) {
+        DialogActivity.startActivity(this);
     }
 }
