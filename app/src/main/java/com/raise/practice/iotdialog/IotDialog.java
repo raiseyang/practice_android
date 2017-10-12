@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
@@ -26,7 +26,7 @@ import com.raise.practice.R;
  * Created by raise.yang on 17/10/10.
  */
 
-public class IotDialog extends AppCompatDialogFragment {
+public class IotDialog extends AppCompatDialogFragment implements IVCDialog {
 
     private final String TAG = "IotDialog";
 
@@ -36,6 +36,18 @@ public class IotDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return mDialog;
+    }
+
+    @Override
+    public boolean isShowing() {
+        return getDialog() != null && getDialog().isShowing();
+    }
+
+    @Override
+    public IVCDialog show() {
+        FragmentActivity fa = (FragmentActivity) mBuilder.context;
+        show(fa.getSupportFragmentManager(), "IotDialog");
+        return this;
     }
 
     /**
@@ -121,7 +133,7 @@ public class IotDialog extends AppCompatDialogFragment {
         }
 
         @Override
-        public DialogFragment create() {
+        public IVCDialog create() {
             dialog = new Dialog(context);
             dialog.setContentView(R.layout.dialog_iot);
             setupView(dialog.getWindow());
@@ -138,14 +150,21 @@ public class IotDialog extends AppCompatDialogFragment {
         private void setupView(Window window) {
             //背景透明
             window.setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(android.R.color.transparent)));
-            View root = window.findViewById(R.id.dialog_layout_background);
+//            WindowManager.LayoutParams attributes = window.getAttributes();
+//            attributes.gravity = Gravity.BOTTOM;
+            //设置宽高
+            ViewGroup root = (ViewGroup) window.findViewById(R.id.dialog_layout_background);
+
+
 //            root.setBackgroundResource(R.drawable.dialog_bg_gray);
             //title
             TextView title_tv = (TextView) window.findViewById(R.id.dialog_textview_title);
-            if (TextUtils.isEmpty(title)) {
-                title_tv.setVisibility(View.GONE);
-            } else {
-                title_tv.setText(title);
+            if (title_tv != null) {
+                if (TextUtils.isEmpty(title)) {
+                    title_tv.setVisibility(View.GONE);
+                } else {
+                    title_tv.setText(title);
+                }
             }
             //message
             ViewGroup msg_vg = (ViewGroup) window.findViewById(R.id.dialog_layout_message);

@@ -49,7 +49,7 @@ public class DialogActivity extends AppCompatActivity implements DialogInterface
                 .setPositiveButton("确定", this)
                 .setNegativeButton("取消", this)
                 .create()
-                .show(getSupportFragmentManager(), "fragment1");
+                .show();
     }
 
 
@@ -66,11 +66,11 @@ public class DialogActivity extends AppCompatActivity implements DialogInterface
         });
 
         new IotDialog.Builder(this)
-                .setTitle("这是一个进度框")
+//                .setTitle("这是一个进度框")
                 .setView(customView)
                 .setNegativeButton("关闭", this)
                 .create()
-                .show(getSupportFragmentManager(), "custom view");
+                .show();
     }
 
     public static void startActivity(Context context) {

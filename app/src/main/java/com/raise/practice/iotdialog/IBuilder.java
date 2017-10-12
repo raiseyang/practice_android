@@ -1,7 +1,6 @@
 package com.raise.practice.iotdialog;
 
 import android.content.DialogInterface;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -31,5 +30,5 @@ public interface IBuilder {
 
     IBuilder setView(View view);
 
-    DialogFragment create();
+    IVCDialog create();
 }
