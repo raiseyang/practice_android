@@ -135,6 +135,8 @@ public class IotDialog extends AppCompatDialogFragment implements IVCDialog {
         @Override
         public IVCDialog create() {
             dialog = new Dialog(context);
+            //去掉头部
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_iot);
             setupView(dialog.getWindow());
 
@@ -154,6 +156,10 @@ public class IotDialog extends AppCompatDialogFragment implements IVCDialog {
 //            attributes.gravity = Gravity.BOTTOM;
             //设置宽高
             ViewGroup root = (ViewGroup) window.findViewById(R.id.dialog_layout_background);
+            ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+            layoutParams.width = context.getResources().getDisplayMetrics().widthPixels * 3 / 5;
+            layoutParams.height = context.getResources().getDisplayMetrics().heightPixels * 3 / 5;
+
 
 
 //            root.setBackgroundResource(R.drawable.dialog_bg_gray);
@@ -164,6 +170,7 @@ public class IotDialog extends AppCompatDialogFragment implements IVCDialog {
                     title_tv.setVisibility(View.GONE);
                 } else {
                     title_tv.setText(title);
+                    title_tv.setVisibility(View.VISIBLE);
                 }
             }
             //message
