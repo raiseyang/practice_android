@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">practice_android</string>
+    <string name="downloaded">下载</string>
 </resources>

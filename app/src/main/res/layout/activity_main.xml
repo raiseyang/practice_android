@@ -25,4 +25,13 @@
         app:layout_constraintLeft_toRightOf="@id/btn_dagger2"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <Button
+        android:id="@+id/btn_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="click_progress"
+        android:text="progress_var"
+        app:layout_constraintLeft_toRightOf="@id/btn_dialog"
+        app:layout_constraintTop_toTopOf="parent"/>
+
 </android.support.constraint.ConstraintLayout>
