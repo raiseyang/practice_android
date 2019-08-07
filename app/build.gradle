@@ -2,7 +2,6 @@ apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-
 android {
     compileSdkVersion 25
     defaultConfig {
@@ -19,6 +18,13 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -32,6 +38,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // jsBridge
     implementation 'com.github.lzyzsd:jsbridge:1.0.4'
+
+    compile project(path: ':annotation')
+//    compile project(path: ':compile')
+    annotationProcessor project(path: ':compile')
+
 }
 repositories {
     mavenCentral()
