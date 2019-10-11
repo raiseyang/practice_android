@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:onClick="click_dagger2"
         android:text="Dagger2"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_dialog"
@@ -23,7 +22,7 @@
         android:onClick="click_dialog"
         android:text="dialog"
         app:layout_constraintLeft_toRightOf="@id/btn_dagger2"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_progress"
@@ -32,6 +31,15 @@
         android:onClick="click_progress"
         android:text="progress_var"
         app:layout_constraintLeft_toRightOf="@id/btn_dialog"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/btn_coroutines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="click_coroutines"
+        android:text="coroutines"
+        app:layout_constraintLeft_toRightOf="@id/btn_progress"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
