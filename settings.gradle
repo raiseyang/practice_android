@@ -1,2 +1,1 @@
-include ':app',  ':annotation', ':compile', ':ali_tee'
-// ':javapoet'
+include ':app'
