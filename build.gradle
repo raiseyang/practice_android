@@ -5,6 +5,10 @@ buildscript {
     repositories {
         jcenter()
         google()
+        jcenter {
+            name = "nonDefaultName"
+            artifactUrls = ["http://4thline.org/m2"]
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
