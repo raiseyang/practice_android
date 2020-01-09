@@ -25,25 +25,30 @@ import org.fourthline.cling.model.types.UDN;
 import org.fourthline.cling.transport.Router;
 
 import java.util.Collection;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 /**
+ * UPNP服务类
+ * 1.封装AndroidUpnpService的操作
+ * 2.开启服务
+ * 3.关闭服务
+ * 4.搜索UPNP设备
+ *
  * @author hubing
  * @version 1.0.0 2015-4-27
  */
 
 public class UpnpServiceBiz {
 
-    protected static String TAG = UpnpServiceBiz.class.getSimpleName();
-    private Context sContext;
-
-    protected AndroidUpnpService upnpService;
+    private static String TAG = UpnpServiceBiz.class.getSimpleName();
     private static UpnpServiceBiz localUpnpService;
 
-    private UpnpRegistryListener listener;
+    private AndroidUpnpService upnpService;
+    private Context sContext;
 
+    private UpnpRegistryListener listener;
+    // UPNP设备：自己，远程设备
     private ConcurrentHashMap<UDN, LocalDevice> localDevices;
 
     private UpnpServiceBiz() {
@@ -75,6 +80,11 @@ public class UpnpServiceBiz {
         return localUpnpService;
     }
 
+    /**
+     * UPNP服务开启后，会收到很多device add,remove，通过该监听，可以收到这些信息
+     *
+     * @param listener
+     */
     public void addListener(UpnpRegistryListener listener) {
         if (upnpService != null) {
             upnpService.getRegistry().addListener(listener);
@@ -83,16 +93,9 @@ public class UpnpServiceBiz {
         }
     }
 
-    public void removeListener(UpnpRegistryListener listener) {
-        upnpService.getRegistry().removeListener(listener);
-    }
-
-    public void removeAllRemoteDevices() {
-        upnpService.getRegistry().removeAllRemoteDevices();
-    }
-
     /**
-     * 添加本地设备
+     * 添加本地设备:添加的设备，立马会被自己的UPNP发现；
+     * 1.同时被远程的UPNP服务发现
      *
      * @param localDevice
      */
@@ -101,7 +104,7 @@ public class UpnpServiceBiz {
         if (upnpService != null && localDevice.getIdentity() != null) {
             upnpService.getRegistry().addDevice(localDevice);
         }
-        addDevice(localDevice.getIdentity().getUdn(), localDevice);
+        localDevices.put(localDevice.getIdentity().getUdn(), localDevice);
     }
 
     /**
@@ -114,18 +117,15 @@ public class UpnpServiceBiz {
         if (upnpService != null && localDevice.getIdentity() != null) {
             upnpService.getRegistry().addDevice(localDevice, options);
         }
-        addDevice(localDevice.getIdentity().getUdn(), localDevice);
+        localDevices.put(localDevice.getIdentity().getUdn(), localDevice);
     }
 
     /**
-     * 添加本地设备到设备列表
+     * 移除UPNP设备
      *
-     * @param device
+     * @param localDevice
+     * @return
      */
-    private void addDevice(UDN udn, LocalDevice device) {
-        localDevices.put(udn, device);
-    }
-
     public boolean removeDevice(LocalDevice localDevice) {
         return upnpService.getRegistry().removeDevice(localDevice);
     }
@@ -147,15 +147,15 @@ public class UpnpServiceBiz {
     }
 
     public void search() {
-        for (Entry<UDN, LocalDevice> entry : localDevices.entrySet()) {
-            Trace.d(TAG, "search() 添加本地设备" + entry.getValue().getDisplayString());
-            addDevice(entry.getValue());
-        }
-        // 添加已知设备
-        for (Device device : upnpService.getRegistry().getDevices()) {
-            Trace.d(TAG, "search() 添加已知设备" + device.getDisplayString());
-            listener.deviceAdded(device);
-        }
+//        for (Entry<UDN, LocalDevice> entry : localDevices.entrySet()) {
+//            Trace.d(TAG, "search() 添加本地设备" + entry.getValue().getDisplayString());
+//            addDevice(entry.getValue());
+//        }
+//        // 添加已知设备
+//        for (Device device : upnpService.getRegistry().getDevices()) {
+//            Trace.d(TAG, "search() 添加已知设备" + device.getDisplayString());
+//            listener.deviceAdded(device);
+//        }
         Trace.d(TAG, "search() upnpService.getControlPoint().search()开始搜索");
         upnpService.getControlPoint().search();
     }
@@ -165,6 +165,7 @@ public class UpnpServiceBiz {
     }
 
     public void search(int mxSeconds) {
+        Trace.d(TAG, "search() mxSeconds=" + mxSeconds);
         upnpService.getControlPoint().search(mxSeconds);
     }
 
