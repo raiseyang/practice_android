@@ -9,6 +9,7 @@ import com.raise.practice.model.DeviceUtil
 import com.raise.practice.server.UpnpServiceBiz
 import kotlinx.android.synthetic.main.activity_light.*
 import java.util.*
+import kotlin.concurrent.thread
 
 
 class LightActivity : AppCompatActivity() {
@@ -32,14 +33,16 @@ class LightActivity : AppCompatActivity() {
                 }
                 BTN2_TEXT -> {
                     print(BTN2_TEXT)
-                    upnpService.router.broadcast(
-                            ("来自" + Build.MANUFACTURER + "的一条广播消息").toByteArray())
+                    thread {
+                        upnpService.router.broadcast(
+                                ("来自" + Build.MANUFACTURER + "的一条广播消息").toByteArray())
+                    }
                 }
             }
         }
 
         override fun getBtnTexts(): ArrayList<String> {
-            return arrayListOf(BTN1_TEXT)
+            return arrayListOf(BTN1_TEXT, BTN2_TEXT)
         }
 
         override fun print(p0: String?) {
@@ -55,6 +58,7 @@ class LightActivity : AppCompatActivity() {
         test_layout.loadTest(TestHelper())
         Trace.d(TAG, "onCreate() upnpService.addDevice(createDevice())")
         val device = DeviceUtil.createDevice()
+        print("add :${device.displayString}")
         upnpService.addDevice(device)
     }
 

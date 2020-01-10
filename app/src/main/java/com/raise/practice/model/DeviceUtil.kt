@@ -11,25 +11,27 @@ import org.fourthline.cling.model.meta.*
 import org.fourthline.cling.model.types.UDADeviceType
 import org.fourthline.cling.model.types.UDN
 import java.io.IOException
+import java.util.*
 
 /**
  * Created by raise.yang on 20/01/09.
  */
 object DeviceUtil {
 
-    const val uuid = "5686b37b-ae57-476d-9b82-111111111111"
+    //    const val uuid = "5686b37b-ae57-476d-9b82-111111111111"
     const val deviceType = "phone"
 
     fun createDevice(): LocalDevice {
         val type = UDADeviceType(deviceType, 1)
 
-        val details = DeviceDetails("Build.DEVICE::" + Build.DEVICE,
+        val details = DeviceDetails("Build.MODEL::" + Build.MODEL,
                 ManufacturerDetails(Build.MANUFACTURER),
                 ModelDetails(Build.MODEL,
                         "Build.HARDWARE：" + Build.HARDWARE,
                         "v1")
         )
-        val udn = UDN(uuid)
+//        val udn = UDN(uuid)
+        val udn = UDN(UUID.randomUUID())
 
         val service = AnnotationLocalServiceBinder().read(ContentDirectoryService::class.java)
         service.setManager(DefaultServiceManager<ContentDirectoryService>(service as LocalService<ContentDirectoryService>?, ContentDirectoryService::class.java))

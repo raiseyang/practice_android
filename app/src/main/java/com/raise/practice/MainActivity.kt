@@ -11,10 +11,14 @@ import com.abupdate.common_ui.AbToast
 import com.raise.practice.inter.UpnpRegistryListener
 import com.raise.practice.model.DeviceWrapper
 import com.raise.practice.server.UpnpServiceBiz
+import com.raise.practice.util.IpUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import org.fourthline.cling.model.meta.Device
 import org.fourthline.cling.model.meta.Service
 import java.util.*
+import java.util.logging.Level
+import java.util.logging.Logger
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private var simpleAdapter: ArrayAdapter<String?>? = null
     private val deviceNames: MutableList<String?> = mutableListOf()
+    private val deviceMap: MutableMap<String?, Device<*, Device<*, *, *>, Service<*, *>>> = mutableMapOf()
 
     inner class TestHelper : AbTestLayout.Helper {
         override fun onClick(p0: String?) {
@@ -49,7 +54,8 @@ class MainActivity : AppCompatActivity() {
 //        org.seamless.util.logging.LoggingUtil.resetRootHandler(
 //                FixedAndroidLogHandler()
 //        )
-//        Logger.getLogger("org.fourthline.cling").setLevel(Level.FINEST)
+//        Logger.getLogger("com.raise.practice").setLevel(Level.ALL)
+        Logger.getLogger("org.fourthline.cling").level = Level.FINEST
         Trace.setShowPosition(true)
         //开启服务
         upnpServiceBiz = UpnpServiceBiz.newInstance()
@@ -62,6 +68,7 @@ class MainActivity : AppCompatActivity() {
 //                }
                 if (deviceWrapper.name() !in deviceNames) {
                     deviceNames.add(deviceWrapper.name())
+                    deviceMap[deviceWrapper.name()] = device
                 }
             }
 
@@ -80,13 +87,24 @@ class MainActivity : AppCompatActivity() {
         btn_2.setOnClickListener {
             clickBtn2()
         }
+        btn_3.text = "广播消息"
+        btn_3.setOnClickListener {
+            clickBtn3()
+        }
+        btn_4.text = "单点发送消息"
+        btn_4.setOnClickListener {
+            clickBtn4()
+        }
 
         simpleAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, deviceNames)
         listView.adapter = simpleAdapter
         listView.setOnItemClickListener { parent, view, position, id ->
             AbToast.show("点击：" + deviceNames[position])
+            thread {
+//                upnpServiceBiz.execute(Play(deviceMap[deviceNames[position]].findService()))
+            }
         }
-
+        tv_ip.text = IpUtil.getLocalIpAddress(this)
     }
 
     private fun clickBtn1() {
@@ -106,6 +124,17 @@ class MainActivity : AppCompatActivity() {
     private fun clickBtn2() {
         Trace.d(TAG, "clickBtn2() ")
         startActivity(Intent(this, LightActivity::class.java))
+    }
+
+    private fun clickBtn3() {
+        Trace.d(TAG, "clickBtn3() ")
+        thread {
+            upnpServiceBiz.router.broadcast("来自服务端的广播消息1".toByteArray())
+        }
+    }
+
+    private fun clickBtn4() {
+        Trace.d(TAG, "clickBtn4() ")
     }
 
     override fun onDestroy() {

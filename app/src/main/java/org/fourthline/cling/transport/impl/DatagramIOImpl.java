@@ -15,12 +15,15 @@
 
 package org.fourthline.cling.transport.impl;
 
+import com.abupdate.common.Trace;
+import com.abupdate.common_ui.AbToast;
+
+import org.fourthline.cling.model.UnsupportedDataException;
 import org.fourthline.cling.model.message.OutgoingDatagramMessage;
 import org.fourthline.cling.transport.Router;
 import org.fourthline.cling.transport.spi.DatagramIO;
 import org.fourthline.cling.transport.spi.DatagramProcessor;
 import org.fourthline.cling.transport.spi.InitializationException;
-import org.fourthline.cling.model.UnsupportedDataException;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -40,6 +43,7 @@ import java.util.logging.Logger;
  * Thread-safety is guaranteed through synchronization of methods of this service and
  * by the thread-safe underlying socket.
  * </p>
+ *
  * @author Christian Bauer
  */
 public class DatagramIOImpl implements DatagramIO<DatagramIOConfigurationImpl> {
@@ -65,6 +69,7 @@ public class DatagramIOImpl implements DatagramIO<DatagramIOConfigurationImpl> {
 
     public DatagramIOImpl(DatagramIOConfigurationImpl configuration) {
         this.configuration = configuration;
+        log.setLevel(Level.ALL);
     }
 
     public DatagramIOConfigurationImpl getConfiguration() {
@@ -103,10 +108,17 @@ public class DatagramIOImpl implements DatagramIO<DatagramIOConfigurationImpl> {
         while (true) {
 
             try {
+                Trace.d(TAG, "run() " + "Entering blocking receiving loop, listening for UDP datagrams on: " +
+                        socket.getLocalAddress());
                 byte[] buf = new byte[getConfiguration().getMaxDatagramBytes()];
                 DatagramPacket datagram = new DatagramPacket(buf, buf.length);
 
                 socket.receive(datagram);
+                Trace.i(TAG, "run() " +
+                        "UDP datagram received from: "
+                        + datagram.getAddress().getHostAddress()
+                        + ":" + datagram.getPort()
+                        + " on: " + localAddress);
 
                 log.fine(
                         "UDP datagram received from: "
@@ -119,11 +131,14 @@ public class DatagramIOImpl implements DatagramIO<DatagramIOConfigurationImpl> {
                 router.received(datagramProcessor.read(localAddress.getAddress(), datagram));
 
             } catch (SocketException ex) {
+                Trace.e(TAG, "receiving() e = " + ex);
                 log.fine("Socket closed");
                 break;
             } catch (UnsupportedDataException ex) {
+                Trace.e(TAG, "receiving() e = " + ex);
                 log.info("Could not read datagram: " + ex.getMessage());
             } catch (Exception ex) {
+                Trace.e(TAG, "receiving() e = " + ex);
                 throw new RuntimeException(ex);
             }
         }
@@ -144,6 +159,8 @@ public class DatagramIOImpl implements DatagramIO<DatagramIOConfigurationImpl> {
         send(packet);
     }
 
+    private static final String TAG = "DatagramIOImpl";
+
     synchronized public void send(DatagramPacket datagram) {
         log.fine("Sending message from address: " + localAddress);
 
@@ -151,10 +168,15 @@ public class DatagramIOImpl implements DatagramIO<DatagramIOConfigurationImpl> {
             socket.send(datagram);
         } catch (SocketException ex) {
             log.fine("Socket closed, aborting datagram send to: " + datagram.getAddress());
+            Trace.e(TAG, "send() e = " + ex);
         } catch (RuntimeException ex) {
+            Trace.e(TAG, "send() e = " + ex);
             throw ex;
         } catch (Exception ex) {
+            Trace.e(TAG, "send() e = " + ex);
             log.log(Level.SEVERE, "Exception sending datagram to: " + datagram.getAddress() + ": " + ex, ex);
         }
+
+        AbToast.show("发送成功：" + new String(datagram.getData()));
     }
 }

@@ -15,11 +15,13 @@
 
 package org.fourthline.cling.transport.impl;
 
+import com.abupdate.common.Trace;
+
+import org.fourthline.cling.model.UnsupportedDataException;
 import org.fourthline.cling.transport.Router;
 import org.fourthline.cling.transport.spi.DatagramProcessor;
 import org.fourthline.cling.transport.spi.InitializationException;
 import org.fourthline.cling.transport.spi.MulticastReceiver;
-import org.fourthline.cling.model.UnsupportedDataException;
 import org.fourthline.cling.transport.spi.NetworkAddressFactory;
 
 import java.net.DatagramPacket;
@@ -37,6 +39,7 @@ import java.util.logging.Logger;
  * Thread-safety is guaranteed through synchronization of methods of this service and
  * by the thread-safe underlying socket.
  * </p>
+ *
  * @author Christian Bauer
  */
 public class MulticastReceiverImpl implements MulticastReceiver<MulticastReceiverConfigurationImpl> {
@@ -102,6 +105,8 @@ public class MulticastReceiverImpl implements MulticastReceiver<MulticastReceive
         }
     }
 
+    private static final String TAG = "MulticastReceiverImpl";
+
     public void run() {
 
         log.fine("Entering blocking receiving loop, listening for UDP datagrams on: " + socket.getLocalAddress());
@@ -115,13 +120,18 @@ public class MulticastReceiverImpl implements MulticastReceiver<MulticastReceive
 
                 InetAddress receivedOnLocalAddress =
                         networkAddressFactory.getLocalAddress(
-                            multicastInterface,
-                            multicastAddress.getAddress() instanceof Inet6Address,
-                            datagram.getAddress()
+                                multicastInterface,
+                                multicastAddress.getAddress() instanceof Inet6Address,
+                                datagram.getAddress()
                         );
-
+                Trace.i(TAG, "run() " + "UDP datagram received from: " + datagram.getAddress().getHostAddress()
+                        + ":" + datagram.getPort()
+                        + " on local interface: " + multicastInterface.getDisplayName()
+                        + " and address: " + receivedOnLocalAddress.getHostAddress()
+//                        + " data=" + new String(datagram.getData())
+                );
                 log.fine(
-                        "UDP datagram received from: " + datagram.getAddress().getHostAddress() 
+                        "UDP datagram received from: " + datagram.getAddress().getHostAddress()
                                 + ":" + datagram.getPort()
                                 + " on local interface: " + multicastInterface.getDisplayName()
                                 + " and address: " + receivedOnLocalAddress.getHostAddress()

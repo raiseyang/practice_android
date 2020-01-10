@@ -15,6 +15,9 @@
 
 package org.fourthline.cling.transport;
 
+import com.abupdate.common.Trace;
+import com.abupdate.common_ui.AbToast;
+
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.model.NetworkAddress;
 import org.fourthline.cling.model.message.IncomingDatagramMessage;
@@ -34,10 +37,6 @@ import org.fourthline.cling.transport.spi.StreamServer;
 import org.fourthline.cling.transport.spi.UpnpStream;
 import org.seamless.util.Exceptions;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
 import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -53,6 +52,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Default;
+import javax.inject.Inject;
 
 /**
  * Default implementation of network message router.
@@ -127,14 +131,14 @@ public class RouterImpl implements Router {
                 try {
                     log.fine("Starting networking services...");
                     networkAddressFactory = getConfiguration().createNetworkAddressFactory();
-
+                    Trace.i(TAG, "enable() ");
                     startInterfaceBasedTransports(networkAddressFactory.getNetworkInterfaces());
                     startAddressBasedTransports(networkAddressFactory.getBindAddresses());
 
                     // The transports possibly removed some unusable network interfaces/addresses
                     if (!networkAddressFactory.hasUsableNetwork()) {
                         throw new NoNetworkException(
-                            "No usable network interface and/or addresses available, check the log for errors."
+                                "No usable network interface and/or addresses available, check the log for errors."
                         );
                     }
 
@@ -222,14 +226,14 @@ public class RouterImpl implements Router {
 
                 StreamServer preferredServer;
                 if (preferredAddress != null &&
-                    (preferredServer = streamServers.get(preferredAddress)) != null) {
+                        (preferredServer = streamServers.get(preferredAddress)) != null) {
                     streamServerAddresses.add(
-                        new NetworkAddress(
-                            preferredAddress,
-                            preferredServer.getPort(),
-                            networkAddressFactory.getHardwareAddress(preferredAddress)
+                            new NetworkAddress(
+                                    preferredAddress,
+                                    preferredServer.getPort(),
+                                    networkAddressFactory.getHardwareAddress(preferredAddress)
 
-                        )
+                            )
                     );
                     return streamServerAddresses;
                 }
@@ -237,7 +241,7 @@ public class RouterImpl implements Router {
                 for (Map.Entry<InetAddress, StreamServer> entry : streamServers.entrySet()) {
                     byte[] hardwareAddress = networkAddressFactory.getHardwareAddress(entry.getKey());
                     streamServerAddresses.add(
-                        new NetworkAddress(entry.getKey(), entry.getValue().getPort(), hardwareAddress)
+                            new NetworkAddress(entry.getKey(), entry.getValue().getPort(), hardwareAddress)
                     );
                 }
                 return streamServerAddresses;
@@ -248,6 +252,8 @@ public class RouterImpl implements Router {
             unlock(readLock);
         }
     }
+
+    private static final String TAG = "RouterImpl";
 
     /**
      * Obtains the asynchronous protocol {@code Executor} and runs the protocol created
@@ -267,12 +273,19 @@ public class RouterImpl implements Router {
             return;
         }
         try {
+
+            Trace.d(TAG, "received() src ip=" + msg.getSourceAddress() + ":" + msg.getSourcePort());
+            Trace.d(TAG, "received() data=" + msg.getBodyString());
+
+            AbToast.show("received:" + msg.getBodyString() + ".from:" +
+                    msg.getSourceAddress() + ":" + msg.getSourcePort());
             ReceivingAsync protocol = getProtocolFactory().createReceivingAsync(msg);
             if (protocol == null) {
                 if (log.isLoggable(Level.FINEST))
                     log.finest("No protocol, ignoring received message: " + msg);
                 return;
             }
+
             if (log.isLoggable(Level.FINE))
                 log.fine("Received asynchronous message: " + msg);
             getConfiguration().getAsyncProtocolExecutor().execute(protocol);
@@ -292,6 +305,9 @@ public class RouterImpl implements Router {
             log.fine("Router disabled, ignoring incoming: " + stream);
             return;
         }
+
+        Trace.d(TAG, "received() stream:" + stream);
+        AbToast.show("received: stream");
         log.fine("Received synchronous stream: " + stream);
         getConfiguration().getSyncProtocolExecutorService().execute(stream);
     }
@@ -321,7 +337,7 @@ public class RouterImpl implements Router {
      *
      * @param msg The TCP (HTTP) stream message to send.
      * @return The return value of the {@link org.fourthline.cling.transport.spi.StreamClient#sendRequest(StreamRequestMessage)}
-     *         method or <code>null</code> if no <code>StreamClient</code> is available.
+     * method or <code>null</code> if no <code>StreamClient</code> is available.
      */
     public StreamResponseMessage send(StreamRequestMessage msg) throws RouterException {
         lock(readLock);
@@ -364,6 +380,9 @@ public class RouterImpl implements Router {
                     if (broadcast != null) {
                         log.fine("Sending UDP datagram to broadcast address: " + broadcast.getHostAddress());
                         DatagramPacket packet = new DatagramPacket(bytes, bytes.length, broadcast, 9);
+                        Trace.d("RouterImpl", "broadcast() " + packet.getAddress() + ":" + packet.getPort());
+                        Trace.d("RouterImpl", "broadcast() " + new String(packet.getData()));
+
                         entry.getValue().send(packet);
                     }
                 }
@@ -388,10 +407,10 @@ public class RouterImpl implements Router {
                     if (log.isLoggable(Level.FINE))
                         log.fine("Init multicast receiver on interface: " + networkInterface.getDisplayName());
                     multicastReceiver.init(
-                        networkInterface,
-                        this,
-                        networkAddressFactory,
-                        getConfiguration().getDatagramProcessor()
+                            networkInterface,
+                            this,
+                            networkAddressFactory,
+                            getConfiguration().getDatagramProcessor()
                     );
 
                     multicastReceivers.put(networkInterface, multicastReceiver);
@@ -495,13 +514,13 @@ public class RouterImpl implements Router {
                 log.finest("Acquired router lock: " + lock.getClass().getSimpleName());
             } else {
                 throw new RouterException(
-                    "Router wasn't available exclusively after waiting " + timeoutMilliseconds + "ms, lock failed: "
-                        + lock.getClass().getSimpleName()
+                        "Router wasn't available exclusively after waiting " + timeoutMilliseconds + "ms, lock failed: "
+                                + lock.getClass().getSimpleName()
                 );
             }
         } catch (InterruptedException ex) {
             throw new RouterException(
-                "Interruption while waiting for exclusive access: " + lock.getClass().getSimpleName(), ex
+                    "Interruption while waiting for exclusive access: " + lock.getClass().getSimpleName(), ex
             );
         }
     }

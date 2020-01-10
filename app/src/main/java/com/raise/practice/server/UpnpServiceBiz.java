@@ -15,7 +15,6 @@ import com.raise.practice.service.UpnpDeviceService;
 import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.controlpoint.ActionCallback;
 import org.fourthline.cling.controlpoint.SubscriptionCallback;
-import org.fourthline.cling.model.DiscoveryOptions;
 import org.fourthline.cling.model.message.header.UpnpHeader;
 import org.fourthline.cling.model.meta.Device;
 import org.fourthline.cling.model.meta.LocalDevice;
@@ -108,19 +107,6 @@ public class UpnpServiceBiz {
     }
 
     /**
-     * 添加本地设备
-     *
-     * @param localDevice
-     * @param options
-     */
-    public void addDevice(LocalDevice localDevice, DiscoveryOptions options) {
-        if (upnpService != null && localDevice.getIdentity() != null) {
-            upnpService.getRegistry().addDevice(localDevice, options);
-        }
-        localDevices.put(localDevice.getIdentity().getUdn(), localDevice);
-    }
-
-    /**
      * 移除UPNP设备
      *
      * @param localDevice
@@ -171,6 +157,10 @@ public class UpnpServiceBiz {
 
     public void search(UpnpHeader searchType, int mxSeconds) {
         upnpService.getControlPoint().search(searchType, mxSeconds);
+    }
+
+    public void sendMsg() {
+
     }
 
     public Future execute(ActionCallback callback) {
