@@ -1,6 +1,10 @@
 package com.raise.practice.launch
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import com.abupdate.common.ContextVal
 import com.abupdate.common.Trace
 import com.raise.practice.autojs.AutoJs
 import com.stardust.autojs.engine.encryption.ScriptEncryption
@@ -19,6 +23,14 @@ import kotlin.properties.Delegates
 class FileScriptLauncher {
     companion object {
         const val TAG = "FileScriptLauncher"
+        const val ACTION_FILE_SCRIPT_LAUNCHER = "com.abupdate.dsapp.action_file_script_launcher"
+
+        fun init() {
+            // 监听脚本广播
+            Trace.i(TAG, "监听脚本广播")
+            IntentFilter(ACTION_FILE_SCRIPT_LAUNCHER)
+            ContextVal.getContext().registerReceiver(ScriptReceiver(FileScriptLauncher()), IntentFilter(ACTION_FILE_SCRIPT_LAUNCHER))
+        }
     }
 
     private var projectConfig: ProjectConfig by Delegates.notNull()
@@ -72,5 +84,17 @@ class FileScriptLauncher {
             e.printStackTrace()
         }
 
+    }
+
+    class ScriptReceiver(private val scriptLauncher: FileScriptLauncher) : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, intent: Intent?) {
+            Trace.i(TAG, "onReceive() action=" + intent?.action)
+            when (intent?.action) {
+                ACTION_FILE_SCRIPT_LAUNCHER -> {
+                    val scriptPath = intent.getStringExtra("scriptPath")
+                    scriptLauncher.launch(scriptPath)
+                }
+            }
+        }
     }
 }
