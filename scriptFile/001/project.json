@@ -1,0 +1,13 @@
+{
+  "assets": [],
+  "build": {
+    "build_id": "001",
+    "build_number": 1,
+    "build_time": 1543638246643
+  },
+  "main": "main.js",
+  "name": "001号脚本",
+  "packageName": "x",
+  "versionCode": 1,
+  "versionName": "1.0.0"
+}

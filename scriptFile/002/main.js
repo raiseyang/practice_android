@@ -1,0 +1,20 @@
+toast("Hello, 我是002号脚本");
+sleep(1000)
+toast("Hello, 我是002号脚本111111");
+VolumeDown()
+sleep(1000)
+VolumeDown()
+toast("Hello, 22222222222222222");
+sleep(1000)
+VolumeDown()
+sleep(1000)
+VolumeDown()
+sleep(1000)
+VolumeDown()
+sleep(1000)
+VolumeDown()
+sleep(1000)
+VolumeDown()
+sleep(1000)
+VolumeDown()
+sleep(1000)
