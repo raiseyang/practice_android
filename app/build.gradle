@@ -43,9 +43,11 @@ dependencies {
     implementation "com.raiseyang.weapon:weapon-base-kt:$weapon_version"
     implementation "com.raiseyang.weapon:weapon-ui:$weapon_version"
 
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    //j2v8直接引入j2v8,不分平台
+    implementation 'com.eclipsesource.j2v8:j2v8:6.0.0@aar'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
 }
 repositories {
