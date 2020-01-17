@@ -1,3 +1,3 @@
-# empty分支
+# j2v8分支
 
-请切换分支，浏览相关功能demo;
+入门指南:https://eclipsesource.com/blogs/tutorials/getting-started-with-j2v8/
