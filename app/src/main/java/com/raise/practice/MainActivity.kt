@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.abupdate.common.Trace
 import com.abupdate.common_ui.AbToast
 import com.eclipsesource.v8.*
+import com.eclipsesource.v8.utils.V8Executor
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -26,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 执行js代码，返回int数据
+     */
     private fun helloWorld() {
         val runtime = V8.createV8Runtime()
         val result = runtime.executeIntegerScript(""
@@ -87,8 +91,14 @@ class MainActivity : AppCompatActivity() {
         parameters.release()
     }
 
+    /**
+     * js调用java方法
+     * receiver 作为call()第一个参数传入
+     * 也可以直接调用toast("Hello world!")
+     */
     private fun callJavaCallback() {
         val callback = JavaVoidCallback { receiver, parameters ->
+            Trace.d(TAG, "receiver=$receiver")
             if (parameters.length() > 0) {
                 val arg1 = parameters.get(0)
                 toast(arg1 as String)
@@ -99,7 +109,14 @@ class MainActivity : AppCompatActivity() {
         }
         val runtime = V8.createV8Runtime()
         runtime.registerJavaMethod(callback, "toast")
-        runtime.executeScript("toast('hello, world');")
+        runtime.executeScript("toast.call({x:'x'},'hello, world');")
+    }
+
+    fun callThread() {
+        val executor = V8Executor("1")
+        executor.start()
+        executor.join()
+        val result = executor.result
     }
 
     fun toast(msg: String) {
