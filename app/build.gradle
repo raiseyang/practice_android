@@ -1,6 +1,6 @@
 apply plugin: "com.android.application"
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
@@ -12,7 +12,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,8 +29,11 @@ android {
     lintOptions {
         abortOnError false
     }
-}
 
+}
+android.applicationVariants.all { variant ->
+    variant.generateBuildConfig.enabled = false
+}
 dependencies {
 }
 repositories {
