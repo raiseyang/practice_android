@@ -1,47 +1,62 @@
 # 最小启动APK大小实践
 
+在做APK文件的瘦身的实践中，为了了解清楚APK文件中到底哪些是必须的，哪些是可以删除的，特地做了本次实践。
+
 ## 使用AS创建新项目
-1.默认生成APK大小：2.2M
+平时开发，我们都是从AS新建项目开始，不断的编码，丰富APK功能；自然APK的文件越来越大。
+这里我们试试当创建一个新项目时，不加任何自己的代码，编译生成一个APK的内容和大小；
+环境：`AndroidStudio 4.0`
+1.默认生成APK大小：**2.2M**
 ![](pic/1.png)
 
-很明显，androidx相关库的代码占用1.5M；考虑去掉相关依赖；
+参考上图，`classes.dex`文件占用空间最大，占比79.3%；再进一步选中后，发现androidx相关库的代码占用1.5M；
+我们知道androidx是google的扩展框架，不是一个APK文件必须的，所以可以去掉相关依赖；
 
-2.去除androidx库后的APK大小：1.2M
 ```
+去除androidx：
 ConstraintLayout使用LinearLayout代替
 Theme.AppCompat.Light.DarkActionBar使用android:Theme.Black.NoTitleBar代替
 AppCompatActivity使用Activity代替
 ```
-![](pic/2.png)
-kotlin相关库占用大约1M；也要去除；
 
-3.去除kotlin相关库后的APK大小：90.4K
+2.去除androidx库后的APK大小：**1.2M**
+
+![](pic/2.png)
+最大文件依然是`classes.dex`，这次是kotlin相关库占用955.1KB。
+kotlin也是google后期进入的，可以去除，使用Java代替。
 ```
-去除kotlin相关gradle插件，依赖
+去除kotlin:
+删除kotlin相关gradle插件，依赖
 MainActivity.kt替换为MainActivity.java
 ```
-![](pic/3.png)
-如图，资源文件目录res占用93%大小，可以全部去除；
 
-4.去除res资源文件目录后的APK大小：7.7K
+3.去除kotlin相关库后的APK大小：**90.4K**
+
+![](pic/3.png)
+去除androidx和kotlin后，APK大小仅为90.4K，比原来的2.2M,减少了近96%大小；
+目前占比最大的是res/下的文件，这里面都是使用到的常量资源:icon（应用图标，APK可以不配置图标），activity.xml（activity的布局文件，可以使用View对象代替），可以全部去除；
+
 ```
+去除res/:
 直接删除res目录下所有文件
 setContentView(new View(this));
 ```
+4.去除res资源文件目录后的APK大小：**7.7K**
 ![](pic/4.png)
-dex文件内，看到BuildConfig也打包到里面，可以去除；
-
-5.去除BuildConfig后的APK大小：7.6K
+如上图，占比最大的是MEAT-INF，这是V1签名的相关内容，暂时先不优化；
+点进`classes.dex`发现BuildConfig这个类，这个类是AS在编译时自动生成的，程序中可以不适用，所以可以去除；
 ```
+去除BuildConfig:
 // 在build.gradle中配置
 android.applicationVariants.all { variant ->
     variant.generateBuildConfig.enabled = false
 }
 ```
-![](pic/5.png)
-最后是清单文件内容，可以想办法优化；
 
-6.优化清单文件后的APK大小：7.9K（仅供参考，主要关注APK内文件大小）
+5.去除BuildConfig后的APK大小：7.6K
+
+![](pic/5.png)
+如上图，AndroidManifest.xml占比较大，考虑将该文件内的内容优化；
 ```
 //将Activity申明简化，后续使用adb命令启动
 //注意一定要配置android:exported="true"，不然adb不能启动界面
@@ -51,10 +66,26 @@ android.applicationVariants.all { variant ->
             android:name=".MainActivity" />
     </application>
 ```
+6.优化清单文件后，APK的下载大小：3.4K
+
 ![](pic/6.png)
+MEAT-INF文件夹下，主要包含V1签名信息，可以考虑去除V1签名信息文件；仅使用V2签名，生成的APK文件仅可安装于Android 7.0及之后的系统中。
 
-7.图6已经快接近极限，AS编程生成APK大小最小就8K左右；
-
+```
+//去除V1签名，配置签名时
+    signingConfigs {
+        signV2 {
+            storeFile file("../sign.jks")
+            storePassword "xxx"
+            keyAlias "xxx"
+            keyPassword "xxx"
+            v1SigningEnabled false
+            v2SigningEnabled true
+        }
+    }
+```
+7.去除V1签名信息后，APK的下载大小仅2.7K；
+![](pic/8.png)
 ## 使用Build Tools工具编译生成APK
 
 根据上一小节经验，我们将app目录下的资源单独拷贝出来，用作源码，使用安卓的SDK构建工具集，就可以编译生成APK；
