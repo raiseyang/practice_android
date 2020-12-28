@@ -2,12 +2,13 @@ package com.raise.practice
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.raise.practice.adapter.ButtonAdapter
+import com.raise.practice.databinding.ActivityMainBinding
 import com.raise.weapon_base.LLog
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,11 +24,14 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        rv_btns.apply {
+        binding.rvBtns.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 3)
             val btnAdapter = ButtonAdapter(dataSet).apply {
                 mListener = object : ButtonAdapter.OnClickButton {
@@ -75,9 +79,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun printLog(msg: String) {
         LLog.i(TAG, "printLog() msg=$msg")
-        tv_content.text = "${tv_content.text}\n$msg"
+        binding.tvContent.text = "${binding.tvContent.text}\n$msg"
         runOnUiThread {
-            sv_content.fullScroll(View.FOCUS_DOWN)
+            binding.svContent.fullScroll(View.FOCUS_DOWN)
         }
     }
 
