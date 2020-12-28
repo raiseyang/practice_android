@@ -1,6 +1,7 @@
-# empty分支
+# throw_exception分支
 
 ## ViewBinding
 https://developer.android.google.cn/topic/libraries/view-binding
 
-请切换分支，浏览相关功能demo;
+## 功能
+直接抛出异常，供系统应用抓取异常日志
