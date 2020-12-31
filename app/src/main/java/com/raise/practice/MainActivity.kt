@@ -2,13 +2,15 @@ package com.raise.practice
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.test.uiautomator.UiDevice
 import com.raise.practice.adapter.ButtonAdapter
 import com.raise.practice.databinding.ActivityMainBinding
 import com.raise.weapon_base.LLog
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,11 +27,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var mDevice: UiDevice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize UiDevice instance
+        mDevice = UiDevice.getInstance(getInstrumentation())
 
         binding.rvBtns.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 3)
@@ -53,6 +59,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn1() {
         printLog("clickBtn1() start")
+        mDevice?.let {
+            mDevice.pressHome()
+        } ?: Toast.makeText(this, "xxx", Toast.LENGTH_SHORT).show()
     }
 
     private fun clickBtn2() {
@@ -75,6 +84,27 @@ class MainActivity : AppCompatActivity() {
         printLog("clickBtn6() start")
     }
 
+
+    fun startMainActivityFromHomeScreen() {
+//
+//        // Start from the home screen
+//        mDevice.pressHome()
+//
+//        // Wait for launcher
+//        val launcherPackage: String = getLauncherPackageName()
+//        assertThat(launcherPackage, notNullValue())
+//        mDevice.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT)
+//
+//        // Launch the blueprint app
+//        val context: Context = applicationContext
+//        val intent: Intent = context.getPackageManager()
+//                .getLaunchIntentForPackage(BASIC_SAMPLE_PACKAGE)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) // Clear out any previous instances
+//        context.startActivity(intent)
+//
+//        // Wait for the app to appear
+//        mDevice.wait(Until.hasObject(By.pkg(BASIC_SAMPLE_PACKAGE).depth(0)), LAUNCH_TIMEOUT)
+    }
 
     @SuppressLint("SetTextI18n")
     private fun printLog(msg: String) {

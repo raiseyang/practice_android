@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+//    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     // android
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -42,6 +42,9 @@ dependencies {
 //    implementation "com.abupdate.weaponry:common:$common_version"
 //    implementation "com.abupdate.weaponry:common-kt:${common_version}"
     implementation 'com.github.raiseyang:Weapon:0.0.1'
+
+//    implementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+//    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

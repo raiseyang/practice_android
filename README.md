@@ -1,6 +1,4 @@
-# empty分支
+# UI Automator分支
 
-## ViewBinding
-https://developer.android.google.cn/topic/libraries/view-binding
-
-请切换分支，浏览相关功能demo;
+## 官网参考地址
+https://developer.android.google.cn/training/testing/ui-automator?hl=zh_cn
