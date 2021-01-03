@@ -1,12 +1,12 @@
 package com.raise.practice
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.test.uiautomator.UiDevice
 import com.raise.practice.adapter.ButtonAdapter
 import com.raise.practice.databinding.ActivityMainBinding
 import com.raise.weapon_base.LLog
@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val TAG = "MainActivity"
         val dataSet = arrayOf(
-                "按钮1",
+                "跳转到辅助设置",
                 "按钮2",
                 "按钮3",
                 "按钮4",
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mDevice: UiDevice
+//    private lateinit var mDevice: UiDevice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Initialize UiDevice instance
-        mDevice = UiDevice.getInstance(getInstrumentation())
+        val instrumentation = getInstrumentation()
+        LLog.d(TAG, "onCreate() instrumentation=$instrumentation")
+//        mDevice = UiDevice.getInstance(instrumentation)
 
         binding.rvBtns.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 3)
@@ -59,9 +61,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn1() {
         printLog("clickBtn1() start")
-        mDevice?.let {
-            mDevice.pressHome()
-        } ?: Toast.makeText(this, "xxx", Toast.LENGTH_SHORT).show()
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        startActivity(intent)
     }
 
     private fun clickBtn2() {

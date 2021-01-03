@@ -92,7 +92,8 @@ class QueryController {
 
     public QueryController(Instrumentation instrumentation) {
         mInstrumentation = instrumentation;
-        UiDevice.getUiAutomation(instrumentation).setOnAccessibilityEventListener(mEventListener);
+        // TODO yangdongsheng 20210102 设置监听器
+//        UiDevice.getUiAutomation(instrumentation).setOnAccessibilityEventListener(mEventListener);
     }
 
     /**

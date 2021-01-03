@@ -3,8 +3,10 @@
 buildscript {
     ext.kotlin_version = '1.4.21'
     repositories {
-        jcenter()
-        google()
+//        jcenter()
+//        google()
+        maven {url 'http://127.0.0.1:8081/repository/wt-sh-maven-proxy/'}
+        maven {url 'http://127.0.0.1:8081/repository/wt-sh-google-proxy/'}
         maven { url 'https://jitpack.io' }
 //        maven { url 'https://maven.aliyun.com/repository/public/' }
     }
@@ -18,8 +20,10 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
-        google()
+//        jcenter()
+//        google()
+        maven {url 'http://127.0.0.1:8081/repository/wt-sh-maven-proxy/'}
+        maven {url 'http://127.0.0.1:8081/repository/wt-sh-google-proxy/'}
         maven { url 'https://jitpack.io' }
 //        maven { url 'https://maven.aliyun.com/repository/public/' }
     }

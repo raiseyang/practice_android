@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--    <Button-->
+    <!--        android:id="@+id/back"-->
+    <!--        android:text="back"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/home"-->
+    <!--        android:text="home"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/lock_screen"-->
+    <!--        android:text="lock_screen"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/notifications"-->
+    <!--        android:text="notifications"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/power_dialog"-->
+    <!--        android:text="power_dialog"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/quick_setting"-->
+    <!--        android:text="quick_setting"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/recents"-->
+    <!--        android:text="recents"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/take_screenshot"-->
+    <!--        android:text="take_screenshot"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <!--    <Button-->
+    <!--        android:id="@+id/toggle_split_screen"-->
+    <!--        android:text="toggle_split_screen"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
+    <Button
+        android:id="@+id/volume_raise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="volume_raise" />
+
+    <Button
+        android:id="@+id/volume_lower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="volume_lower" />
+
+    <Button
+        android:id="@+id/volume_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="volume_mute" />
+
+    <Button
+        android:id="@+id/scroll_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="scroll_up" />
+
+    <Button
+        android:id="@+id/swipe_to_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="swipe_to_left" />
+
+    <Button
+        android:id="@+id/swipe_to_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="swipe_to_right" />
+</LinearLayout>

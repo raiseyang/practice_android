@@ -145,6 +145,7 @@ public class UiDevice implements Searchable {
     }
 
     static UiAutomation getUiAutomation(final Instrumentation instrumentation) {
+        // TODO yangdongsheng 20210102 这里返回null，需要重构
         int flags = Configurator.getInstance().getUiAutomationFlags();
         if (UiDevice.API_LEVEL_ACTUAL > Build.VERSION_CODES.M) {
             return instrumentation.getUiAutomation(flags);
