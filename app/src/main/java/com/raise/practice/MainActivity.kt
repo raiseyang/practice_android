@@ -1,15 +1,18 @@
 package com.raise.practice
 
 import android.annotation.SuppressLint
+import android.app.Instrumentation
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.raise.practice.adapter.ButtonAdapter
 import com.raise.practice.databinding.ActivityMainBinding
 import com.raise.weapon_base.LLog
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -67,9 +70,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn2() {
         printLog("clickBtn2() start")
+        thread {
+            printLog("clickBtn2() start in other thread")
+            Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_UP)
+        }
+        printLog("clickBtn2() end.")
     }
 
     private fun clickBtn3() {
+        thread {
+            printLog("clickBtn2() start in other thread")
+            Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_VOLUME_DOWN)
+        }
         printLog("clickBtn3() start")
     }
 
@@ -110,8 +122,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun printLog(msg: String) {
         LLog.i(TAG, "printLog() msg=$msg")
-        binding.tvContent.text = "${binding.tvContent.text}\n$msg"
         runOnUiThread {
+            binding.tvContent.text = "${binding.tvContent.text}\n$msg"
             binding.svContent.fullScroll(View.FOCUS_DOWN)
         }
     }
