@@ -2,7 +2,6 @@ package com.raise.practice
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +21,36 @@ class MainActivity : AppCompatActivity() {
                 "按钮5",
                 "按钮6"
         )
+    }
+
+    private fun clickBtn1() {
+        printLog("clickBtn1() start")
+
+    }
+
+    private fun clickBtn2() {
+        printLog("clickBtn2() start")
+
+    }
+
+    private fun clickBtn3() {
+        printLog("clickBtn3() start")
+
+    }
+
+    private fun clickBtn4() {
+        printLog("clickBtn4() start")
+
+    }
+
+    private fun clickBtn5() {
+        printLog("clickBtn5() start")
+
+    }
+
+    private fun clickBtn6() {
+        printLog("clickBtn6() start")
+
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -51,31 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickBtn1() {
-        printLog("clickBtn1() start")
-    }
-
-    private fun clickBtn2() {
-        printLog("clickBtn2() start")
-    }
-
-    private fun clickBtn3() {
-        printLog("clickBtn3() start")
-    }
-
-    private fun clickBtn4() {
-        printLog("clickBtn4() start")
-    }
-
-    private fun clickBtn5() {
-        printLog("clickBtn5() start")
-    }
-
-    private fun clickBtn6() {
-        printLog("clickBtn6() start")
-    }
-
-
     @SuppressLint("SetTextI18n")
     private fun printLog(msg: String) {
         LLog.i(TAG, "printLog() msg=$msg")
@@ -84,5 +88,4 @@ class MainActivity : AppCompatActivity() {
             binding.svContent.fullScroll(View.FOCUS_DOWN)
         }
     }
-
 }
