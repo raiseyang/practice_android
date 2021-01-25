@@ -1,7 +1,12 @@
 package com.raise.practice
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
 import android.os.SystemClock
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                 "主线程睡眠",
                 "按钮4",
                 "按钮5",
-                "按钮6"
+                "模拟后台异常"
         )
     }
 
@@ -51,6 +56,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn6() {
         printLog("clickBtn6() start")
+        printLog("广播：adb shell am broadcast -a com.raise.practice.exception --ei type 1" +
+                "\n1. 空指针异常" +
+                "\n2. 除0 异常" +
+                "\n3. ANR"
+        )
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -78,9 +88,40 @@ class MainActivity : AppCompatActivity() {
             }
             adapter = btnAdapter
         }
+
+        registerReceiver(broadcastReceiver, IntentFilter("com.raise.practice.exception"))
     }
 
+    override fun onDestroy() {
+        unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
+    }
 
+    //adb shell am broadcast -a com.raise.practice.exception --ei type 1
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            printLog("onReceive() intent.action=" + intent!!.action)
+            val type = intent!!.getIntExtra("type", 0)
+            printLog("onReceive() type=$type")
+            when (type) {
+                1 -> {
+                    printLog("throw java.lang.NullPointerException")
+                    Handler().postDelayed({ throw java.lang.NullPointerException("test null pointer ....") }, 1000)
+                }
+                2 -> {
+                    printLog("a / 0   除0异常")
+                    val a = 2
+                    val b = a / 0
+                }
+                3 -> {
+                    printLog("睡眠TimeUnit.MINUTES.toMillis(5)")
+                    SystemClock.sleep(TimeUnit.MINUTES.toMillis(5))
+                }
+            }
+            printLog("onReceive() end. intent.action=" + intent!!.action)
+        }
+
+    }
 
     @SuppressLint("SetTextI18n")
     private fun printLog(msg: String) {
