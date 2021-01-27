@@ -1,12 +1,11 @@
 apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.raise.practice"
-        minSdkVersion 19
+        minSdkVersion 21
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
         versionCode 1
@@ -26,20 +25,29 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
     // android
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
 
+//    def common_version = '0.0.8'
+//    implementation "com.abupdate.weaponry:common:$common_version"
+//    implementation "com.abupdate.weaponry:common-kt:${common_version}"
+    implementation 'com.github.raiseyang:Weapon:0.0.1'
     //j2v8直接引入j2v8,不分平台
     implementation 'com.eclipsesource.j2v8:j2v8:6.0.0@aar'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 }
 repositories {
