@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+<!-- 测试GlobalAction start-->
     <!--    <Button-->
     <!--        android:id="@+id/back"-->
     <!--        android:text="back"-->
@@ -48,39 +49,79 @@
     <!--        android:text="toggle_split_screen"-->
     <!--        android:layout_width="wrap_content"-->
     <!--        android:layout_height="wrap_content"/>-->
-    <Button
-        android:id="@+id/volume_raise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="volume_raise" />
+    <!-- 测试GlobalAction end-->
+    <!--    <Button-->
+    <!--        android:id="@+id/volume_raise"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="volume_raise" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/volume_lower"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="volume_lower" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/volume_mute"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="volume_mute" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/scroll_up"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="scroll_up" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/swipe_to_left"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="swipe_to_left" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/swipe_to_right"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="swipe_to_right" />-->
+
+    <!-- 测试模拟按钮 start-->
 
     <Button
-        android:id="@+id/volume_lower"
+        android:id="@+id/btn_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="volume_lower" />
+        android:text="当前界面布局" />
 
     <Button
-        android:id="@+id/volume_mute"
+        android:id="@+id/btn_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="volume_mute" />
+        android:text="点击一个按钮" />
 
     <Button
-        android:id="@+id/scroll_up"
+        android:id="@+id/btn_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="scroll_up" />
+        android:text="向前滑动" />
 
     <Button
-        android:id="@+id/swipe_to_left"
+        android:id="@+id/btn_4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="swipe_to_left" />
+        android:text="向后滑动" />
 
     <Button
-        android:id="@+id/swipe_to_right"
+        android:id="@+id/btn_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="swipe_to_right" />
+        android:text="click(600,180)" />
+
+    <Button
+        android:id="@+id/btn_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="longclick(600,180)" />
+
 </LinearLayout>

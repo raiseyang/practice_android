@@ -1,15 +1,16 @@
 package com.raise.practice
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.accessibilityservice.GestureDescription
 import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.content.Intent
 import android.graphics.Path
 import android.graphics.PixelFormat
-import android.media.AudioManager
 import android.os.Build
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.ViewConfiguration
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
@@ -19,6 +20,10 @@ import com.raise.weapon_base.LLog
 
 
 class GlobalActionBarService : AccessibilityService() {
+
+    companion object {
+        const val TAG = "GlobalActionBarService"
+    }
 
     //    var mLayout: FrameLayout? = null
     lateinit var mViewBinding: ActionBarBinding
@@ -37,53 +42,107 @@ class GlobalActionBarService : AccessibilityService() {
         super.onServiceConnected()
         LLog.d("GlobalActionBarService", "onServiceConnected() ")
         Toast.makeText(this, "yds::onServiceConnected() ", Toast.LENGTH_SHORT).show()
+
+        serviceInfo.flags = serviceInfo.flags and AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
+
         createFloatWindow()
         initPerformGlobalAction()
+        initCodeAction()
+
         mViewBinding.apply {
-            volumeRaise.setOnClickListener {
-                LLog.d("GlobalActionBarService", "configureVolumeButton() ")
-                val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI)
-            }
-            volumeLower.setOnClickListener {
-                LLog.d("GlobalActionBarService", "configureVolumeButton() ")
-                val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI)
-            }
-            volumeMute.setOnClickListener {
-                LLog.d("GlobalActionBarService", "configureVolumeButton() ")
-                val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-                        AudioManager.ADJUST_TOGGLE_MUTE, AudioManager.FLAG_SHOW_UI)
-            }
-            scrollUp.setOnClickListener {
-                val scrollable = findScrollableNode(windows.get(0).root)
-                scrollable?.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD.id)
-            }
-            swipeToLeft.setOnClickListener {
-                val swipePath = Path()
-                swipePath.moveTo(1000f, 1000f)
-                swipePath.lineTo(100f, 1000f)
-                if (Build.VERSION.SDK_INT >= 24) {
-                    val gestureBuilder = GestureDescription.Builder()
-                    gestureBuilder.addStroke(StrokeDescription(swipePath, 0, 500))
-                    dispatchGesture(gestureBuilder.build(), null, null)
+            btn1.setOnClickListener {
+                val rootWindow = rootInActiveWindow
+                LLog.d("GlobalActionBarService", "onServiceConnected() rootWindow=$rootWindow")
+                rootWindow?.apply {
+                    LLog.d("GlobalActionBarService", "onServiceConnected() childCount=${childCount}")
+                    LLog.d("GlobalActionBarService", "onServiceConnected() child[0]=${getChild(0)}")
                 }
             }
-            swipeToRight.setOnClickListener {
+            btn2.setOnClickListener {
+                val destBtn = findViewByText(rootInActiveWindow, "清除未上传的列表")
+                LLog.d(TAG, "onServiceConnected() destBtn=$destBtn")
+                destBtn?.let {
+                    destBtn.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                }
+            }
+            btn3.setOnClickListener {
+                val scrollableViewList = findScrollableView(rootInActiveWindow)
+                LLog.d(TAG, "onServiceConnected() scrollableViewList.size=${scrollableViewList.size}")
+                scrollableViewList[0].performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
+            }
+            btn4.setOnClickListener {
+                val scrollableViewList = findScrollableView(rootInActiveWindow)
+                LLog.d(TAG, "onServiceConnected() scrollableViewList.size=${scrollableViewList.size}")
+                scrollableViewList[0].performAction(AccessibilityNodeInfo.ACTION_SCROLL_BACKWARD)
+            }
+            btn5.setOnClickListener {
                 val swipePath = Path()
-                swipePath.moveTo(100f, 1000f)
-                swipePath.lineTo(1000f, 1000f)
+                swipePath.moveTo(600f, 180f)
                 if (Build.VERSION.SDK_INT >= 24) {
                     val gestureBuilder = GestureDescription.Builder()
-                    gestureBuilder.addStroke(StrokeDescription(swipePath, 0, 500))
+                    gestureBuilder.addStroke(StrokeDescription(swipePath, 0, ViewConfiguration.getTapTimeout().toLong()))
                     dispatchGesture(gestureBuilder.build(), null, null)
                 }
+
+            }
+            btn6.setOnClickListener {
+                val swipePath = Path()
+                swipePath.moveTo(600f, 180f)
+                if (Build.VERSION.SDK_INT >= 24) {
+                    val gestureBuilder = GestureDescription.Builder()
+                    gestureBuilder.addStroke(StrokeDescription(swipePath, 0, ViewConfiguration.getLongPressTimeout().toLong()))
+                    dispatchGesture(gestureBuilder.build(), null, null)
+                }
+
             }
         }
+    }
 
+    private fun initCodeAction() {
+        mViewBinding.apply {
+//            volumeRaise.setOnClickListener {
+//                LLog.d("GlobalActionBarService", "configureVolumeButton() ")
+//                val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+//                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI)
+//            }
+//            volumeLower.setOnClickListener {
+//                LLog.d("GlobalActionBarService", "configureVolumeButton() ")
+//                val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+//                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI)
+//            }
+//            volumeMute.setOnClickListener {
+//                LLog.d("GlobalActionBarService", "configureVolumeButton() ")
+//                val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+//                        AudioManager.ADJUST_TOGGLE_MUTE, AudioManager.FLAG_SHOW_UI)
+//            }
+//            scrollUp.setOnClickListener {
+//                val scrollable = findScrollableNode(windows.get(0).root)
+//                scrollable?.performAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_FORWARD.id)
+//            }
+//            swipeToLeft.setOnClickListener {
+//                val swipePath = Path()
+//                swipePath.moveTo(1000f, 1000f)
+//                swipePath.lineTo(100f, 1000f)
+//                if (Build.VERSION.SDK_INT >= 24) {
+//                    val gestureBuilder = GestureDescription.Builder()
+//                    gestureBuilder.addStroke(StrokeDescription(swipePath, 0, 500))
+//                    dispatchGesture(gestureBuilder.build(), null, null)
+//                }
+//            }
+//            swipeToRight.setOnClickListener {
+//                val swipePath = Path()
+//                swipePath.moveTo(100f, 1000f)
+//                swipePath.lineTo(1000f, 1000f)
+//                if (Build.VERSION.SDK_INT >= 24) {
+//                    val gestureBuilder = GestureDescription.Builder()
+//                    gestureBuilder.addStroke(StrokeDescription(swipePath, 0, 500))
+//                    dispatchGesture(gestureBuilder.build(), null, null)
+//                }
+//            }
+        }
     }
 
     private fun initPerformGlobalAction() {
@@ -119,7 +178,11 @@ class GlobalActionBarService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        LLog.d("GlobalActionBarService", "onAccessibilityEvent() start.")
+        event?.let {
+            if (it.packageName != null) {
+                GlobalActionDelegate.onAccessibilityEvent(it)
+            }
+        }
     }
 
     private fun findScrollableNode(root: AccessibilityNodeInfo): AccessibilityNodeInfo? {
