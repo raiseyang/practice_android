@@ -1,1 +1,3 @@
+include ':jsengine'
+include ':jsapilib'
 include ':app'

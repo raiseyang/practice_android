@@ -2,19 +2,17 @@ package com.raise.practice
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.abupdate.common.Trace
-import com.abupdate.common_ui.AbToast
+import androidx.recyclerview.widget.GridLayoutManager
 import com.eclipsesource.v8.*
 import com.eclipsesource.v8.utils.V8Executor
-import kotlinx.android.synthetic.main.activity_main.*
-
-import androidx.recyclerview.widget.GridLayoutManager
+import com.raise.jsengine.GlobalFunc
 import com.raise.practice.adapter.ButtonAdapter
 import com.raise.practice.databinding.ActivityMainBinding
 import com.raise.weapon_base.LLog
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,8 +20,8 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "MainActivity"
         val dataSet = arrayOf(
                 "按钮1",
-                "按钮2",
-                "按钮3",
+                "java调用JS",
+                "JS调用java",
                 "按钮4",
                 "按钮5",
                 "按钮6"
@@ -63,18 +61,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn2() {
         printLog("clickBtn2() start")
+        callJsMethod()
     }
 
     private fun clickBtn3() {
         printLog("clickBtn3() start")
+        callJavaCallback()
     }
 
     private fun clickBtn4() {
         printLog("clickBtn4() start")
+        registerConsoleApi()
     }
 
     private fun clickBtn5() {
         printLog("clickBtn5() start")
+        registerConsoleApi2()
     }
 
     private fun clickBtn6() {
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 + "var hello = 'hello, ';\n"
                 + "var world = 'world!';\n"
                 + "hello.concat(world).length;\n")
-        Trace.d("MainActivity", "result=$result")
+        LLog.d("MainActivity", "result=$result")
         runtime.release(false)
     }
 
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 //        person.getType()
 //        person.keys
 
-        Trace.d("MainActivity", hockeyTeam.getString("name"))
+        LLog.d("MainActivity", hockeyTeam.getString("name"))
         person.release()
         hockeyTeam.release()
         runtime.release()
@@ -147,11 +149,11 @@ class MainActivity : AppCompatActivity() {
         hockeyTeam.add("players", players)
 
         val type = hockeyTeam.getType("players")
-        Trace.d("MainActivity", "players type=$type")
+        LLog.d("MainActivity", "players type=$type")
 
         val parameters = V8Array(runtime).push(player3)
         val size = hockeyTeam.executeIntegerFunction("addPlayer", parameters)
-        Trace.d("MainActivity", "size=$size") // 输出3
+        LLog.d("MainActivity", "size=$size") // 输出3
         parameters.release()
     }
 
@@ -162,7 +164,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun callJavaCallback() {
         val callback = JavaVoidCallback { receiver, parameters ->
-            Trace.d(TAG, "receiver=$receiver")
+//            val receiverP1Value = receiver.getString("p1")
+//            LLog.d(TAG, "receiver=$receiver,p1=$receiverP1Value")
             if (parameters.length() > 0) {
                 val arg1 = parameters.get(0)
                 toast(arg1 as String)
@@ -173,7 +176,33 @@ class MainActivity : AppCompatActivity() {
         }
         val runtime = V8.createV8Runtime()
         runtime.registerJavaMethod(callback, "toast")
-        runtime.executeScript("toast.call({x:'x'},'hello, world');")
+//        runtime.executeScript("toast.call({p1:'ppp'},'hello, world');")
+        runtime.executeScript("toast('hello, world');")
+    }
+
+    private fun registerConsoleApi() {
+        val v8 = V8.createV8Runtime()
+        val console = Console()
+        val v8Console = V8Object(v8)
+        v8Console.registerJavaMethod(console, "log", "log", arrayOf<Class<*>>(String::class.java))
+        v8Console.registerJavaMethod(console, "error", "error", arrayOf<Class<*>>(String::class.java))
+        v8.add("console2222", v8Console)
+        v8Console.release()
+        v8.executeScript("console2222.log('hello, world');")
+        v8.release()
+    }
+
+    // 自己写的api
+    private fun registerConsoleApi2() {
+        val v8 = V8.createV8Runtime()
+        com.raise.jsengine.Console.injectV8(v8)
+        GlobalFunc.injectV8(v8)
+        v8.executeScript("""
+            console.log('hello, world');
+            toast("hello, toast content");
+            sleep(2000);
+            console.log('hello, world  2s');
+        """.trimIndent())
     }
 
     fun callThread() {
@@ -184,6 +213,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toast(msg: String) {
-        AbToast.show(msg)
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    class Console {
+        fun log(message: String) {
+            LLog.i("Test INFO", "[INFO] $message")
+        }
+
+        fun error(message: String) {
+            LLog.e("Test ERROR", "[ERROR] $message")
+        }
     }
 }

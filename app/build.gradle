@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.github.raiseyang:Weapon:0.0.1'
     //j2v8直接引入j2v8,不分平台
     implementation 'com.eclipsesource.j2v8:j2v8:6.0.0@aar'
+    implementation project(path: ':jsengine')
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
