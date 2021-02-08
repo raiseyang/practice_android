@@ -1,17 +1,24 @@
 package com.raise.practice
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
-import android.widget.Toast
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.eclipsesource.v8.*
-import com.eclipsesource.v8.utils.V8Executor
+import com.raise.autorunner.WAccessibilityService
+import com.raise.jsengine.Console
 import com.raise.jsengine.GlobalFunc
 import com.raise.practice.adapter.ButtonAdapter
 import com.raise.practice.databinding.ActivityMainBinding
 import com.raise.weapon_base.LLog
+import com.raise.weapon_ui.ToastUtil
+import com.raise.weapon_ui.floatwindow.FloatWindow
+import com.raise.weapon_ui.floatwindow.IFloatWindow
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,16 +26,18 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val TAG = "MainActivity"
         val dataSet = arrayOf(
-                "按钮1",
-                "java调用JS",
-                "JS调用java",
-                "按钮4",
-                "按钮5",
-                "按钮6"
+                "弹出悬浮窗",
+                "跳到辅助设置",
+                "1",
+                "1",
+                "1",
+                "1"
         )
     }
 
     private lateinit var binding: ActivityMainBinding
+
+    private var floatWindow: IFloatWindow? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,21 +66,59 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn1() {
         printLog("clickBtn1() start")
+
+        val button1 = Button(this)
+        button1.setOnClickListener {
+            ToastUtil.show("点击今日头条")
+            thread {
+                val v8 = V8.createV8Runtime()
+                Console.injectV8(v8)
+                GlobalFunc.injectV8(v8)
+                v8.executeScript("""
+
+
+click("今日头条");
+sleep(5000);
+click("上海");
+for (i = 0; i < 10; i++) {
+    console.info("第"+i+"次上划")
+    scrollUp();
+//    if( i == 3){
+        
+//    sleep(1000)
+//    scrollDown();
+//    }
+
+    sleep(5000)
+}
+
+
+
+
+        """.trimIndent())
+            }
+        }
+
+        floatWindow = FloatWindow.Builder(WAccessibilityService.instance ?: this)
+                .setView(button1)
+                .create()
+
+        floatWindow?.show()
     }
 
     private fun clickBtn2() {
         printLog("clickBtn2() start")
-        callJsMethod()
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        startActivity(intent)
     }
 
     private fun clickBtn3() {
         printLog("clickBtn3() start")
-        callJavaCallback()
+        floatWindow?.hide()
     }
 
     private fun clickBtn4() {
         printLog("clickBtn4() start")
-        registerConsoleApi()
     }
 
     private fun clickBtn5() {
@@ -93,105 +140,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * 执行js代码，返回int数据
-     */
-    private fun helloWorld() {
-        val runtime = V8.createV8Runtime()
-        val result = runtime.executeIntegerScript(""
-                + "var hello = 'hello, ';\n"
-                + "var world = 'world!';\n"
-                + "hello.concat(world).length;\n")
-        LLog.d("MainActivity", "result=$result")
-        runtime.release(false)
-    }
-
-    private fun callJsObject() {
-        val runtime = V8.createV8Runtime()
-        runtime.executeVoidScript(""
-                + "var person = {};\n"
-                + "var hockeyTeam = {name : 'WolfPack'};\n"
-                + "person.first = 'Ian';\n"
-                + "person['last'] = 'Bull';\n"
-                + "person.hockeyTeam = hockeyTeam;\n")
-
-        val person = runtime.getObject("person")
-        val hockeyTeam = person.getObject("hockeyTeam")
-//        person.getType()
-//        person.keys
-
-        LLog.d("MainActivity", hockeyTeam.getString("name"))
-        person.release()
-        hockeyTeam.release()
-        runtime.release()
-    }
-
-    private fun callJsMethod() {
-        val runtime = V8.createV8Runtime()
-        //注意JS直接使用players.length访问数组仓库，博客示例代码有问题
-        runtime.executeVoidScript("""
-            var hockeyTeam = {
-     name      : 'WolfPack',
-     players   : [],
-     addPlayer : function(player) {
-                   this.players.push(player);
-                   return this.players.length;
-     }
-}
-        """.trimIndent())
-
-        val hockeyTeam = runtime.getObject("hockeyTeam")
-
-        val player1 = V8Object(runtime).add("name", "John")
-        val player2 = V8Object(runtime).add("name", "Chris")
-        val player3 = V8Object(runtime).add("name", "Raise")
-        val players = V8Array(runtime).push(player1).push(player2)
-        hockeyTeam.add("players", players)
-
-        val type = hockeyTeam.getType("players")
-        LLog.d("MainActivity", "players type=$type")
-
-        val parameters = V8Array(runtime).push(player3)
-        val size = hockeyTeam.executeIntegerFunction("addPlayer", parameters)
-        LLog.d("MainActivity", "size=$size") // 输出3
-        parameters.release()
-    }
-
-    /**
-     * js调用java方法
-     * receiver 作为call()第一个参数传入
-     * 也可以直接调用toast("Hello world!")
-     */
-    private fun callJavaCallback() {
-        val callback = JavaVoidCallback { receiver, parameters ->
-//            val receiverP1Value = receiver.getString("p1")
-//            LLog.d(TAG, "receiver=$receiver,p1=$receiverP1Value")
-            if (parameters.length() > 0) {
-                val arg1 = parameters.get(0)
-                toast(arg1 as String)
-                if (arg1 is Releasable) {
-                    arg1.release()
-                }
-            }
-        }
-        val runtime = V8.createV8Runtime()
-        runtime.registerJavaMethod(callback, "toast")
-//        runtime.executeScript("toast.call({p1:'ppp'},'hello, world');")
-        runtime.executeScript("toast('hello, world');")
-    }
-
-    private fun registerConsoleApi() {
-        val v8 = V8.createV8Runtime()
-        val console = Console()
-        val v8Console = V8Object(v8)
-        v8Console.registerJavaMethod(console, "log", "log", arrayOf<Class<*>>(String::class.java))
-        v8Console.registerJavaMethod(console, "error", "error", arrayOf<Class<*>>(String::class.java))
-        v8.add("console2222", v8Console)
-        v8Console.release()
-        v8.executeScript("console2222.log('hello, world');")
-        v8.release()
-    }
-
     // 自己写的api
     private fun registerConsoleApi2() {
         val v8 = V8.createV8Runtime()
@@ -205,24 +153,4 @@ class MainActivity : AppCompatActivity() {
         """.trimIndent())
     }
 
-    fun callThread() {
-        val executor = V8Executor("1")
-        executor.start()
-        executor.join()
-        val result = executor.result
-    }
-
-    fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
-
-    class Console {
-        fun log(message: String) {
-            LLog.i("Test INFO", "[INFO] $message")
-        }
-
-        fun error(message: String) {
-            LLog.e("Test ERROR", "[ERROR] $message")
-        }
-    }
 }

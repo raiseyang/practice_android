@@ -33,18 +33,11 @@ android {
 }
 
 dependencies {
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    api project(path: ':jsapilib')
-    api project(path: ':autorunner')
-    api 'com.eclipsesource.j2v8:j2v8:6.2.0@aar'
     implementation 'com.raiseyang.weapon:weapon-base:0.0.2'
 //    implementation 'com.raiseyang.weapon:weapon-base-kt:0.0.2'
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
 }
