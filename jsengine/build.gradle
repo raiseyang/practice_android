@@ -39,8 +39,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     api project(path: ':jsapilib')
-    api 'com.github.raiseyang:Weapon:0.0.1'
+    api project(path: ':autorunner')
     api 'com.eclipsesource.j2v8:j2v8:6.2.0@aar'
+    implementation 'com.raiseyang.weapon:weapon-base:0.0.2'
+//    implementation 'com.raiseyang.weapon:weapon-base-kt:0.0.2'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -1,3 +1,4 @@
+include ':autorunner'
 include ':jsengine'
 include ':jsapilib'
 include ':app'
