@@ -7,6 +7,10 @@ import com.raise.weapon_base.LLog
 
 /**
  * 单例类
+ * js:
+ * <code>
+ *     console.info("hello");
+ * </code>
  */
 object Console : IConsole, IV8Inject {
     // js全局tag

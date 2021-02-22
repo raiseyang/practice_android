@@ -14,6 +14,10 @@ interface IFilter {
 
 object Filter {
 
+    fun id(id: String): IFilter = filter("id(${id})") {
+        this.viewIdResourceName == id
+    }
+
     fun textStartsWith(text: String): IFilter = filter("textStartsWith(${text})") {
         this.text.startsWith(text)
     }

@@ -9,6 +9,13 @@ https://developer.android.google.cn/topic/libraries/view-binding
 参考博客：
 https://blog.csdn.net/heqiangflytosky/article/details/76832673
 
+## js语法学习
+https://www.w3school.com.cn/js/js_object_definition.asp
+
+## 使用js语言的内建函数
+var message = "Hello world!";
+var x = message.toUpperCase();
+console.info("x = " + x)   // 打印出大写的HELLO WORLD!
 
 ```
 v8.executeVoidScript("function myFunc(params) { var myDate = new Date(params.timestamp); return myDate; }");

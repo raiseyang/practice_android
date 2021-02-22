@@ -153,6 +153,21 @@ object GlobalFunc : IGlobalFunc, IV8Inject {
         }
     }
 
+    override fun currentPackage(): String {
+        return ""
+    }
+
+    override fun currentActivity(): String {
+        return ""
+    }
+
+    override fun setClip(text: String) {
+    }
+
+    override fun getClip(): String {
+        return "xx"
+    }
+
     private fun errorParams(error: String) {
         LLog.e("GlobalFunc", "errorParams() $error")
     }
