@@ -16,17 +16,20 @@ interface IDevice {
     /**
      * 设备是否被唤醒
      */
+    @JsApi
     fun isScreenOn(): Boolean
 
     /**
      * 唤醒设备
      */
+    @JsApi
     fun wakeUp()
 
     /**
      * 设备震动
      * @param timeInSecond 震动时长，单位：秒
      */
+    @JsApi
     fun vibrate(timeInSecond: Int)
 
 
