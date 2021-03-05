@@ -38,14 +38,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
 
-    //j2v8直接引入j2v8,不分平台
-    implementation 'com.eclipsesource.j2v8:j2v8:6.0.0@aar'
-
-    implementation 'com.raiseyang.weapon:weapon-base:0.0.2'
-//    implementation 'com.raiseyang.weapon:weapon-base-kt:0.0.2'
-
-    implementation project(path: ':jsengine')
-    implementation project(path: ':autorunner')
+    def weapon_version = '0.0.3'
+    implementation "com.raiseyang.weapon:weapon-base:$weapon_version"
+    implementation "com.raiseyang.weapon:weapon-base-kt:$weapon_version"
+    implementation "com.raiseyang.weapon:weapon-ui:$weapon_version"
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
