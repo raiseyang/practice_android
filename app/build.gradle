@@ -38,7 +38,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
 
-    def weapon_version = '0.0.3'
+    def weapon_version = '0.0.4'
     implementation "com.raiseyang.weapon:weapon-base:$weapon_version"
     implementation "com.raiseyang.weapon:weapon-base-kt:$weapon_version"
     implementation "com.raiseyang.weapon:weapon-ui:$weapon_version"
