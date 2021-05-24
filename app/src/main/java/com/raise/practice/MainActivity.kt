@@ -1,9 +1,13 @@
 package com.raise.practice
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.recyclerview.widget.GridLayoutManager
 import com.raise.practice.adapter.ButtonAdapter
 import com.raise.practice.databinding.ActivityMainBinding
@@ -19,7 +23,7 @@ class MainActivity : AppCompatActivity() {
                 "按钮3",
                 "按钮4",
                 "按钮5",
-                "按钮6"
+                "申请读取T卡权限"
         )
     }
 
@@ -48,8 +52,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun clickBtn6() {
-        printLog("clickBtn6() start")
+//        ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.READ_EXTERNAL_STORAGE)
+        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
     }
 
