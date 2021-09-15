@@ -18,4 +18,6 @@ public class JNI {
         return name + ",from java";
     }
 
+    public static native String getStaticName(String name);
+
 }

@@ -17,7 +17,10 @@
          SHARED
 
          # Provides a relative path to your source file(s).
-         src/main/cpp/com_raise_practice_jni_JNI.c)
+         #         src/main/cpp/com_raise_practice_jni_JNI.c
+         src/main/cpp/jni_static_register.c
+
+         )
  find_library( # Sets the name of the path variable.
          log-lib
 

@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.raise.practice.jni.JNI
-import kotlinx.android.synthetic.main.activity_main.*
 import androidx.recyclerview.widget.GridLayoutManager
+import com.raise.Hello
 import com.raise.practice.adapter.ButtonAdapter
 import com.raise.practice.databinding.ActivityMainBinding
 import com.raise.weapon_base.LLog
@@ -34,12 +34,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn2() {
         printLog("clickBtn2() start")
-
+        val sayHello = Hello.sayHello("raise")
+        printLog(sayHello)
     }
 
     private fun clickBtn3() {
         printLog("clickBtn3() start")
-
+        printLog("JNI.getStaticName:" + JNI.getStaticName("raise_static"))
     }
 
     private fun clickBtn4() {
