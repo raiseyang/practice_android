@@ -1,6 +1,5 @@
-# empty分支
+# custom_instrumentation分支
 
-## ViewBinding
-https://developer.android.google.cn/topic/libraries/view-binding
+https://www.jianshu.com/p/5a7768f22b36
 
-请切换分支，浏览相关功能demo;
+https://blog.csdn.net/gdutxiaoxu/article/details/81459910
