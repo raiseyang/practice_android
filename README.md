@@ -1,6 +1,9 @@
-# empty分支
+# compose分支
 
-## ViewBinding
-https://developer.android.google.cn/topic/libraries/view-binding
+## Compose
+https://developer.android.google.cn/jetpack/compose?hl=zh
 
-请切换分支，浏览相关功能demo;
+https://mp.weixin.qq.com/s/Rl497tSplXT1bBdZl1MqVA
+
+
+Compose对kotlin版本，AGP版本，SDK编译版本等都有要求，编译时，按照错误提示，将这些版本更新到对应的版本即可；
