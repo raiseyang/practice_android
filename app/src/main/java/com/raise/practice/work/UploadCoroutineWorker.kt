@@ -9,6 +9,8 @@ import kotlinx.coroutines.delay
 /**
  * 使用协程的Worker
  * 继承自：[CoroutineWorker]
+ *
+ * 协程worker被取消后，拥有协程特性：当前doWork()中的代码立即停止执行
  */
 class UploadCoroutineWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {

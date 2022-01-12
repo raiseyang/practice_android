@@ -22,9 +22,9 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "MainActivity"
         val dataSet = arrayOf(
             "执行一个一次行最简单的工作",
-            "按钮2",
-            "按钮3",
-            "按钮4",
+            "执行任务2",
+            "执行协程任务3",
+            "取消任务2或3",
             "按钮5",
             "申请读取T卡权限"
         )
@@ -46,15 +46,15 @@ class MainActivity : AppCompatActivity() {
             .setRequiredNetworkType(NetworkType.UNMETERED) // 需要有网络
             .build()
 
-        val list = listOf<String>("1", "3")
+        val list = "11"
 
         val uploadWorkerRequest = OneTimeWorkRequestBuilder<UploadWorker>().apply {
             setConstraints(constraints)
             // 给worker增加标记；WorkManager.cancelAllWorkByTag(String)可以取消worker
-            addTag("upload_worker")
+            addTag("task_2")
                 .setInputData(
                     workDataOf(
-                        "list" to list
+                        "key1" to list
                     )
                 )
         }.build()
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         printLog("clickBtn3() start")
 
         val uploadWorkerRequest = OneTimeWorkRequestBuilder<UploadCoroutineWorker>().apply {
-            addTag("upload_worker")
+            addTag("task_3")
         }.build()
 
 
@@ -101,6 +101,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickBtn4() {
         printLog("clickBtn4() start")
+        WorkManager.getInstance(this).apply {
+            cancelAllWorkByTag("task_2")
+            cancelAllWorkByTag("task_3")
+        }
 
     }
 
