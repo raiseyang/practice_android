@@ -38,17 +38,15 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
 
-    def weapon_version = '0.0.5'
-    implementation "com.raise.weapon:weapon-base:$weapon_version"
-    implementation "com.raise.weapon:weapon-base-kt:$weapon_version"
-    implementation "com.raise.weapon:weapon-ui:$weapon_version"
-    implementation "com.raise.weapon:weapon-ui-kt:$weapon_version"
+    def weapon_version = '0.1.0'
+    implementation "io.github.raiseyang:weapon-base:$weapon_version"
+    implementation "io.github.raiseyang:weapon-ui:$weapon_version"
+    implementation "io.github.raiseyang:weapon-base-kt:$weapon_version"
+    implementation "io.github.raiseyang:weapon-ui-kt:$weapon_version"
+    implementation "io.github.raiseyang:weapon-jetpack-kt:$weapon_version"
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-}
-repositories {
-    mavenCentral()
 }
